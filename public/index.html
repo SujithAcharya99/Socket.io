@@ -2,18 +2,25 @@
 <html>
 
     <head>
-
+        <title>Chat App</title>
+        <link rel="icon" href="/img/favicon.png">
+        <link rel="stylesheet" href="/css/styles.min.css">
     </head>
     <body>
-        CHAT APPP
-        <!--<button id="increment">+1</button>-->
 
-        <form id="message-form">
-            <input name="message" placeholder="message">
-            <button >SEND</button>
-        </form>
+        <div class="centered-form">
+            <div class="centered-form__box">
+                <h1>Join</h1>
+                <form action="/chat.html">
+                    <label > display name</label>
+                    <input type="text" name="username" placeholder="Display Name" required>
+                    <label >Room </label>
+                    <input type="text" name="room" placeholder="Room" required>
+                    <button>JOIN</button>
+                </form>
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/js/chat.js"></script>
+            </div>
+
+        </div>
     </body>
 </html>
