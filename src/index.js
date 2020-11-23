@@ -2,6 +2,8 @@ const http = require('http');
 const path = require('path');
 const express = require('express');
 const socketio = require('socket.io');
+const Filter = require('bad-words');
+const { generateMessage, generateLocationMessage } = require('./utils/messages')
 
 const app = express();
 const server = http.createServer(app);
@@ -17,25 +19,34 @@ let count = 0;
 io.on('connection', (socket) => {
     console.log('New webSocket Connection');
 
-    // socket.emit('countUpdated',count);
+    socket.on('join', ({ username, room}) => {
+        socket.join(room)
+        socket.emit('message', generateMessage('welcome!'));
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`));
 
-    // socket.on('increment', () => {
-    //     count++;
-    //     // socket.emit('countUpdated',count);
-    //     io.emit('countUpdated',count);
-    // })
+    })
 
-    socket.emit('message', 'welcome!');
+    socket.on('SendMessage', (msg, callback) => {
 
-    socket.broadcast.emit('message', 'A new User has joined');
+        const filter = new Filter()
+        if (filter.isProfane(msg)) {
+            return callback('Profanity is not allowed...!');
+        }
 
-    socket.on('SendMessage', (sendmsg) => {
-        io.emit('message',sendmsg);
+        // io.emit('message',msg);
+        io.to('abd').emit('message', generateMessage(msg));
+        callback();
+    })
+
+    socket.on('sendLocation', (sendloc, callback) => {
+        io.emit('locationMessage',generateLocationMessage(`https://google.com/maps?q=${sendloc.latitude},${sendloc.longitude}`));
+        callback();
     })
 
 
     socket.on('disconnect', () => {
-        io.emit('message','A user has left..!')
+        // io.emit('message','A user has left..!')
+        io.emit('message',generateMessage('A user has left..!'));
     })
 })
 
