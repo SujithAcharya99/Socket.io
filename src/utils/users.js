@@ -1,5 +1,5 @@
 const users = [];
-//adduser, removeUser, Getuser, getusersinroom
+//adduser, removeUser, GetUser, getUsersInRoom
 
 const addUser = ({ id, username, room }) => {
     //clear the data 
